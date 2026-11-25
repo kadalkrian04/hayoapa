@@ -1,8 +1,7 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { sql } from "@/lib/db";
 import { Trophy, UserPlus, LogIn, CheckCircle2, CreditCard, BadgeCheck } from "lucide-react";
-
-export const dynamic = "force-dynamic";
 
 interface EventItem {
   id: number;
@@ -15,7 +14,7 @@ interface EventItem {
   registered_count: number;
 }
 
-export default async function HomePage() {
+async function EventListTable() {
   const events = (await sql`
     SELECT e.*,
       (SELECT COUNT(*)::int FROM registrations r WHERE r.event_id = e.id AND r.payment_status = 'PAID') AS registered_count
@@ -24,6 +23,56 @@ export default async function HomePage() {
     ORDER BY e.id ASC
   `) as EventItem[];
 
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-left text-sm">
+        <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase text-slate-600">
+          <tr>
+            <th className="px-4 py-3.5">Kode</th>
+            <th className="px-4 py-3.5">Golongan Pertandingan</th>
+            <th className="px-4 py-3.5">Tipe</th>
+            <th className="px-4 py-3.5">Biaya Pendaftaran</th>
+            <th className="px-4 py-3.5">Peserta Lunas</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {events.map((ev) => (
+            <tr key={ev.id} className="hover:bg-blue-50/40">
+              <td className="px-4 py-3.5 font-mono font-bold text-blue-700">
+                {ev.code}
+              </td>
+              <td className="px-4 py-3.5 font-semibold text-slate-900">
+                {ev.name}
+              </td>
+              <td className="px-4 py-3.5">
+                <span
+                  className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    ev.category_type === "Ganda"
+                      ? "bg-amber-100 text-amber-800"
+                      : "bg-blue-100 text-blue-800"
+                  }`}
+                >
+                  {ev.category_type}
+                </span>
+              </td>
+              <td className="px-4 py-3.5 font-bold text-slate-900">
+                Rp {ev.price.toLocaleString("id-ID")}
+              </td>
+              <td className="px-4 py-3.5 text-slate-600">
+                <span className="inline-flex items-center gap-1">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  {ev.registered_count} / {ev.quota}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Navbar */}
@@ -116,63 +165,25 @@ export default async function HomePage() {
 
       {/* Daftar 10 Golongan Pertandingan */}
       <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-slate-900 md:text-2xl">
-              Daftar Golongan Pertandingan
-            </h2>
-            <p className="text-sm text-slate-600">
-              Pilih golongan yang sesuai saat sudah masuk ke akun atlet.
-            </p>
-          </div>
+        <div className="mb-5">
+          <h2 className="text-xl font-bold text-slate-900 md:text-2xl">
+            Daftar Golongan Pertandingan
+          </h2>
+          <p className="text-sm text-slate-600">
+            Pilih golongan yang sesuai saat sudah masuk ke akun atlet.
+          </p>
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase text-slate-600">
-                <tr>
-                  <th className="px-4 py-3.5">Kode</th>
-                  <th className="px-4 py-3.5">Golongan Pertandingan</th>
-                  <th className="px-4 py-3.5">Tipe</th>
-                  <th className="px-4 py-3.5">Biaya Pendaftaran</th>
-                  <th className="px-4 py-3.5">Peserta Lunas</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {events.map((ev) => (
-                  <tr key={ev.id} className="hover:bg-blue-50/40">
-                    <td className="px-4 py-3.5 font-mono font-bold text-blue-700">
-                      {ev.code}
-                    </td>
-                    <td className="px-4 py-3.5 font-semibold text-slate-900">
-                      {ev.name}
-                    </td>
-                    <td className="px-4 py-3.5">
-                      <span
-                        className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          ev.category_type === "Ganda"
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-blue-100 text-blue-800"
-                        }`}
-                      >
-                        {ev.category_type}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 font-bold text-slate-900">
-                      Rp {ev.price.toLocaleString("id-ID")}
-                    </td>
-                    <td className="px-4 py-3.5 text-slate-600">
-                      <span className="inline-flex items-center gap-1">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        {ev.registered_count} / {ev.quota}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Suspense
+            fallback={
+              <div className="p-8 text-center text-sm text-slate-500">
+                Memuat daftar golongan pertandingan...
+              </div>
+            }
+          >
+            <EventListTable />
+          </Suspense>
         </div>
       </section>
     </div>
