@@ -101,7 +101,7 @@ export default function HomePage() {
                 className="h-8 w-8 rounded-full bg-white p-0.5 object-contain"
               />
               <span className="text-sm font-bold tracking-tight text-white">
-                PBSI Event
+                PBSI JATIM Event
               </span>
             </Link>
 
