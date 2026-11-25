@@ -10,6 +10,8 @@ import {
   ShieldCheck,
   Sparkles,
   ArrowRight,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
 
 interface EventItem {
@@ -30,9 +32,9 @@ async function EventListTable() {
   `) as EventItem[];
 
   return (
-    <div className="overflow-x-auto">
+    <div className="max-h-[460px] overflow-y-auto overflow-x-auto">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-emerald-100 bg-emerald-50/70 text-xs font-bold uppercase tracking-wider text-emerald-900">
+        <thead className="sticky top-0 z-10 border-b border-emerald-100 bg-emerald-50 text-xs font-bold uppercase tracking-wider text-emerald-900 shadow-xs">
           <tr>
             <th className="px-5 py-4">No.</th>
             <th className="px-5 py-4">Kode</th>
@@ -78,6 +80,12 @@ async function EventListTable() {
 }
 
 export default function HomePage() {
+  // Ganti nomor WhatsApp Admin di bawah ini (gunakan format 628xxx tanpa + atau 0 di depan)
+  const waAdminNumber = "6281234567890";
+  const waMessage = encodeURIComponent(
+    "Halo Admin PBSI Jatim, saya ingin bertanya terkait pendaftaran event badminton."
+  );
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section dengan Gradien Hijau & Kuning PBSI */}
@@ -89,12 +97,12 @@ export default function HomePage() {
           <nav className="flex items-center justify-between rounded-full border border-white/15 bg-emerald-950/85 px-3 py-2 shadow-xl backdrop-blur-md">
             <Link href="/" className="flex items-center gap-2.5 pl-2">
               <img
-                src="/logo-pbsi.png"
+                src="/logo.png"
                 alt="Logo PBSI"
                 className="h-8 w-8 rounded-full bg-white p-0.5 object-contain"
               />
               <span className="text-sm font-bold tracking-tight text-white">
-                PBSI Event
+                PBSI JATIM Event
               </span>
             </Link>
 
@@ -104,6 +112,9 @@ export default function HomePage() {
               </a>
               <a href="#golongan" className="transition hover:text-yellow-300">
                 Golongan
+              </a>
+              <a href="#kontak" className="transition hover:text-yellow-300">
+                Kontak
               </a>
               <Link href="/dashboard" className="transition hover:text-yellow-300">
                 Dashboard
@@ -131,7 +142,7 @@ export default function HomePage() {
         <section className="relative z-10 mx-auto mt-12 max-w-4xl px-4 text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-yellow-300/40 bg-white/95 p-2 shadow-lg">
             <img
-              src="/logo-pbsi.png"
+              src="/logo.png"
               alt="PBSI"
               className="h-full w-full object-contain"
             />
@@ -197,7 +208,7 @@ export default function HomePage() {
             <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
               <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-yellow-50 p-6 text-center">
                 <img
-                  src="/logo-pbsi.png"
+                  src="/logo.png"
                   alt="Logo PBSI"
                   className="h-14 w-14 object-contain"
                 />
@@ -293,7 +304,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Daftar 29 Golongan Pertandingan */}
+      {/* Daftar 29 Golongan Pertandingan (Scrollable) */}
       <section id="golongan" className="mx-auto max-w-5xl px-4 pb-20">
         <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
@@ -303,6 +314,9 @@ export default function HomePage() {
             <h2 className="text-2xl font-extrabold text-slate-900">
               Daftar Golongan Pertandingan
             </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Geser ke atas/bawah di dalam tabel untuk melihat seluruh 29 kategori.
+            </p>
           </div>
           <Link
             href="/register"
@@ -324,6 +338,59 @@ export default function HomePage() {
           </Suspense>
         </div>
       </section>
+
+      {/* Footer Kontak Resmi PBSI Jatim */}
+      <footer id="kontak" className="border-t border-emerald-800 bg-emerald-950 text-emerald-100">
+        <div className="mx-auto max-w-5xl px-4 py-12">
+          <div className="grid gap-8 md:grid-cols-2 md:items-center">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/logo.png"
+                  alt="Logo PBSI"
+                  className="h-11 w-11 rounded-full bg-white p-1 object-contain"
+                />
+                <div>
+                  <h3 className="text-base font-extrabold text-white">
+                    PBSI Jawa Timur
+                  </h3>
+                  <p className="text-xs text-emerald-300">
+                    Portal Resmi Pendaftaran Event Badminton
+                  </p>
+                </div>
+              </div>
+              <p className="max-w-md text-xs leading-relaxed text-emerald-200/80">
+                Butuh bantuan terkait pendaftaran akun atlet, pemilihan golongan,
+                atau kendala pembayaran? Hubungi panitia resmi kami melalui kontak
+                di samping.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
+              <a
+                href={`https://wa.me/${waAdminNumber}?text=${waMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-yellow-400 px-5 py-2.5 text-xs font-extrabold text-emerald-950 shadow-sm transition hover:bg-yellow-300"
+              >
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp Admin
+              </a>
+              <a
+                href="mailto:sekum@pbsijatim.com"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-700 bg-emerald-900/70 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-emerald-800"
+              >
+                <Mail className="h-4 w-4 text-yellow-300" />
+                sekum@pbsijatim.com
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-emerald-900 pt-6 text-center text-xs text-emerald-400/80">
+            © {new Date().getFullYear()} PBSI Jawa Timur. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
