@@ -387,7 +387,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 border-t border-emerald-900 pt-6 text-center text-xs text-emerald-400/80">
-            © {new Date().getFullYear()} PBSI Jawa Timur. All rights reserved.
+            © 2026 PBSI Jawa Timur. All rights reserved.
           </div>
         </div>
       </footer>
