@@ -19,17 +19,14 @@ interface EventItem {
   category_type: string;
   gender_req: string;
   price: number;
-  quota: number;
-  registered_count: number;
 }
 
 async function EventListTable() {
   const events = (await sql`
-    SELECT e.*,
-      (SELECT COUNT(*)::int FROM registrations r WHERE r.event_id = e.id AND r.payment_status = 'PAID') AS registered_count
-    FROM events e
-    WHERE e.is_active = TRUE
-    ORDER BY e.id ASC
+    SELECT id, code, name, category_type, gender_req, price
+    FROM events
+    WHERE is_active = TRUE
+    ORDER BY id ASC
   `) as EventItem[];
 
   return (
@@ -37,16 +34,19 @@ async function EventListTable() {
       <table className="w-full text-left text-sm">
         <thead className="border-b border-emerald-100 bg-emerald-50/70 text-xs font-bold uppercase tracking-wider text-emerald-900">
           <tr>
+            <th className="px-5 py-4">No.</th>
             <th className="px-5 py-4">Kode</th>
             <th className="px-5 py-4">Golongan Pertandingan</th>
             <th className="px-5 py-4">Kategori</th>
             <th className="px-5 py-4">Biaya Pendaftaran</th>
-            <th className="px-5 py-4">Peserta Lunas</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100 bg-white">
-          {events.map((ev) => (
+          {events.map((ev, index) => (
             <tr key={ev.id} className="transition hover:bg-emerald-50/40">
+              <td className="px-5 py-3.5 text-xs font-semibold text-slate-500">
+                {index + 1}
+              </td>
               <td className="px-5 py-3.5">
                 <span className="inline-block rounded-lg bg-emerald-100 px-2.5 py-1 font-mono text-xs font-extrabold text-emerald-800">
                   {ev.code}
@@ -69,12 +69,6 @@ async function EventListTable() {
               <td className="px-5 py-3.5 font-bold text-slate-900">
                 Rp {ev.price.toLocaleString("id-ID")}
               </td>
-              <td className="px-5 py-3.5 text-slate-600">
-                <span className="inline-flex items-center gap-1.5 font-medium">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  {ev.registered_count} / {ev.quota}
-                </span>
-              </td>
             </tr>
           ))}
         </tbody>
@@ -88,20 +82,19 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section dengan Gradien Hijau & Kuning PBSI */}
       <div className="relative overflow-hidden bg-gradient-to-b from-emerald-700 via-emerald-600 to-lime-500 pb-24 pt-6 text-white">
-        {/* Efek Glow Kuning Halus di Background */}
         <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-yellow-300/25 blur-3xl" />
 
-        {/* Floating Pill Navbar (Gaya IrsandDigital) */}
+        {/* Floating Pill Navbar */}
         <header className="relative z-20 mx-auto max-w-4xl px-4">
           <nav className="flex items-center justify-between rounded-full border border-white/15 bg-emerald-950/85 px-3 py-2 shadow-xl backdrop-blur-md">
             <Link href="/" className="flex items-center gap-2.5 pl-2">
               <img
-                src="/logo.png"
+                src="/logo-pbsi.png"
                 alt="Logo PBSI"
                 className="h-8 w-8 rounded-full bg-white p-0.5 object-contain"
               />
               <span className="text-sm font-bold tracking-tight text-white">
-                PBSI JATIM Event
+                PBSI Event
               </span>
             </Link>
 
@@ -136,10 +129,9 @@ export default function HomePage() {
 
         {/* Konten Tengah Hero */}
         <section className="relative z-10 mx-auto mt-12 max-w-4xl px-4 text-center">
-          {/* Badge Logo PBSI Mengambang */}
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-yellow-300/40 bg-white/95 p-2 shadow-lg">
             <img
-              src="/logo.png"
+              src="/logo-pbsi.png"
               alt="PBSI"
               className="h-full w-full object-contain"
             />
@@ -156,11 +148,10 @@ export default function HomePage() {
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-emerald-50 md:text-base">
             Portal pendaftaran resmi atlet badminton dengan sistem verifikasi
-            pembayaran otomatis, pemilihan 10 golongan pertandingan, dan penerbitan
-            Nomor Registrasi Event instan.
+            pembayaran otomatis, pilihan lengkap 29 golongan pertandingan, dan
+            penerbitan Nomor Registrasi Event instan.
           </p>
 
-          {/* Tombol Pill CTA */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/register"
@@ -183,17 +174,16 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* Preview Window Mockup (Gaya IrsandDigital) */}
+        {/* Preview Window Mockup */}
         <div className="relative z-10 mx-auto mt-12 max-w-4xl px-4">
           <div className="overflow-hidden rounded-3xl border border-white/30 bg-white text-slate-900 shadow-2xl">
-            {/* Top Bar ala Browser */}
             <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-5 py-3">
               <div className="flex items-center gap-1.5">
                 <span className="h-3 w-3 rounded-full bg-red-400" />
                 <span className="h-3 w-3 rounded-full bg-yellow-400" />
                 <span className="h-3 w-3 rounded-full bg-emerald-400" />
               </div>
-              <div className="rounded-full bg-white px-4 py-1 text-[11px] font-medium text-slate-500 shadow-xs border border-slate-200">
+              <div className="rounded-full border border-slate-200 bg-white px-4 py-1 text-[11px] font-medium text-slate-500 shadow-xs">
                 re-event-pbsi-jatim.vercel.app/dashboard
               </div>
               <Link
@@ -204,12 +194,10 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Isi Preview Card */}
             <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
-              {/* Kiri: Contoh Kartu Atlet */}
               <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-yellow-50 p-6 text-center">
                 <img
-                  src="/logo.png"
+                  src="/logo-pbsi.png"
                   alt="Logo PBSI"
                   className="h-14 w-14 object-contain"
                 />
@@ -227,7 +215,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Kanan: Fitur Utama */}
               <div className="flex flex-col justify-center space-y-4">
                 <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
                   Keunggulan Sistem Pendaftaran
@@ -235,8 +222,8 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 gap-2.5">
                   <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
                     <span className="block h-2.5 w-2.5 rounded-full bg-emerald-600" />
-                    <p className="mt-2 text-xs font-bold text-slate-900">10 Golongan</p>
-                    <p className="text-[11px] text-slate-500">Tunggal & Ganda</p>
+                    <p className="mt-2 text-xs font-bold text-slate-900">29 Golongan</p>
+                    <p className="text-[11px] text-slate-500">Tunggal, Ganda & Veteran</p>
                   </div>
                   <div className="rounded-xl border border-yellow-200 bg-yellow-50/60 p-3">
                     <span className="block h-2.5 w-2.5 rounded-full bg-yellow-500" />
@@ -306,7 +293,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Daftar 10 Golongan Pertandingan */}
+      {/* Daftar 29 Golongan Pertandingan */}
       <section id="golongan" className="mx-auto max-w-5xl px-4 pb-20">
         <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
