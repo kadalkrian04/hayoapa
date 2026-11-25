@@ -96,7 +96,7 @@ export default function HomePage() {
           <nav className="flex items-center justify-between rounded-full border border-white/15 bg-emerald-950/85 px-3 py-2 shadow-xl backdrop-blur-md">
             <Link href="/" className="flex items-center gap-2.5 pl-2">
               <img
-                src="/logo-pbsi.png"
+                src="/logo.png"
                 alt="Logo PBSI"
                 className="h-8 w-8 rounded-full bg-white p-0.5 object-contain"
               />
@@ -139,7 +139,7 @@ export default function HomePage() {
           {/* Badge Logo PBSI Mengambang */}
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-yellow-300/40 bg-white/95 p-2 shadow-lg">
             <img
-              src="/logo-pbsi.png"
+              src="/logo.png"
               alt="PBSI"
               className="h-full w-full object-contain"
             />
@@ -209,7 +209,7 @@ export default function HomePage() {
               {/* Kiri: Contoh Kartu Atlet */}
               <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-yellow-50 p-6 text-center">
                 <img
-                  src="/logo-pbsi.png"
+                  src="/logo.png"
                   alt="Logo PBSI"
                   className="h-14 w-14 object-contain"
                 />
